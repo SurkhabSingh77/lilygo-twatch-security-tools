@@ -1,138 +1,59 @@
-# LilyGO T-Watch S3 — Educational & Ethical WiFi Security Toolkit
+# LilyGO T-Watch S3 — Bruce Firmware Exploration
 
-Version: 1.0.0  
-Last updated: 2026-01-21
+A hands-on learning record for using the LilyGO T-Watch S3 (ESP32-S3) with the open-source Bruce firmware.
 
-Short description
-- Educational toolkit for secure, lab-only WiFi security experiments and detection prototyping on the LilyGO T-Watch S3 (ESP32-S3).
+> **Status:** Documentation only at present. This repository does not contain a custom security toolkit, independently developed firmware, host-side utilities, automated tests, or a CI pipeline.
 
-Overview
-- This repository provides firmware examples, host-side utilities, and documentation for safe, ethical WiFi security research using the LilyGO T-Watch S3 (ESP32-S3). It is intentionally focused on teaching, reproducibility, and defensive techniques: passive logging, telemetry, isolated experiment scenarios, and lightweight detection proofs-of-concept suitable for constrained devices.
+## Overview
 
-Ethics & legal disclaimer (read first)
-- All experiments MUST be performed only on devices and networks you own or where you have explicit, documented permission.
-- Intercepting, interfering with, or attacking networks or devices you do not own or are not authorized to test is illegal and unethical.
-- Use this project only for education, defensive research, and authorized testing. If you discover third-party vulnerabilities, follow responsible disclosure procedures and vendor guidance.
+I used a LilyGO T-Watch S3 smartwatch as a portable embedded device for learning about ESP32 hardware and wireless-security concepts. I installed Bruce firmware using the project's web flasher and explored the functionality provided by the firmware.
 
-Supported hardware
-- LilyGO T-Watch S3 (ESP32-S3) — other ESP32-S3 boards may be compatible with small changes
-- Recommended: a separate WiFi adapter for host-side monitor-mode captures (Linux recommended)
+This repository documents my use of the hardware and upstream firmware. It does not claim that I created Bruce, implemented its features, or developed a separate Wi-Fi security toolkit.
 
-Tools & software
-- ESP-IDF (recommended for low-level features)
-- PlatformIO or Arduino-ESP32 (easier/high-level alternative)
-- esptool.py (flashing)
-- Python 3.8+ (host scripts)
-- Wireshark / tcpdump (packet analysis)
-- scapy (crafted-frame experiments on host; only in lab)
-- hostapd / dnsmasq (isolated APs)
-- Recommended: Git, make, and a serial terminal (minicom / picocom / idf.py monitor)
+## Hardware
 
-Repository layout (recommended)
-- firmware/
-  - espidf/               — ESP-IDF projects and build instructions
-  - platformio/           — PlatformIO projects and convenience sketches
-  - arduino/              — Arduino sketches (if provided)
-- tools/
-  - capture/              — host capture helpers (pcap rotate, metadata extract)
-  - analysis/             — small Python analysis scripts (RSSI histograms, CSV exporters)
-  - deploy/               — flashing helpers and serial-log collectors
-- docs/
-  - design/               — architecture, diagrams, and testbed design notes
-  - experiments/          — step-by-step lab scenarios and expected outcomes
-  - ethics.md             — detailed ethical guidance & responsible disclosure checklist
-- examples/
-  - passive-logger/       — safe, anonymized metadata logger (rate-limited)
-  - beacon-lab/           — controlled beacon/probe generation (isolated networks only)
-  - anomaly-detector/     — lightweight detection prototype (on-device)
-- tests/
-  - ci/                   — small host-unit tests and linters
-  - hw/                   — hardware test procedures and checklists
-- .github/
-  - ISSUE_TEMPLATE.md
-  - PULL_REQUEST_TEMPLATE.md
-- requirements.txt        — Python dependencies for host tools
-- LICENSE
-- README.md
+- **Device:** LilyGO T-Watch S3
+- **Microcontroller family:** ESP32-S3
+- **Firmware used:** [Bruce](https://github.com/pr3y/Bruce)
+- **Installation method:** Bruce web flasher
 
-Example folder-tree (visual)
-- /
-  - firmware/
-  - tools/
-  - docs/
-  - examples/
-  - tests/
-  - .github/
-  - requirements.txt
-  - LICENSE
-  - README.md
+The exact hardware revision, firmware release, and installation date have not yet been recorded. These will be added after verification.
 
-Quickstart (safe lab steps)
-1. Prepare an isolated lab environment
-   - Create an isolated WiFi SSID or VLAN with no production devices and no internet access.
-   - Use a separate host WiFi adapter in monitor mode for passive capture when needed.
-   - Ensure you have permission for any equipment you test.
+## What I did
 
-2. Prerequisites (host)
-   - Install Python 3.8+ and pip: pip install -r requirements.txt
-   - Install ESP-IDF or PlatformIO per official docs.
-   - Install Wireshark for traffic analysis.
+- Flashed Bruce firmware onto the T-Watch S3 using the project's web flasher.
+- Explored the features available in the firmware.
+- Used the device for hands-on learning about wireless networking and embedded security.
+- Compared the T-Watch S3 experience with other hardware in my lab, including the M5StickC Plus2 and a 2.8-inch CYD touchscreen board.
 
-3. Build and flash (PlatformIO example)
-   - Open the PlatformIO project in `firmware/platformio/`
-   - Select the T-Watch S3 board, connect USB, and run Upload
-   - Or use: pio run -e <env> -t upload
+## Upstream project attribution
 
-4. Build and flash (ESP-IDF example)
-   - cd firmware/espidf/<project>
-   - idf.py set-target esp32s3
-   - idf.py build
-   - idf.py -p <PORT> flash monitor
+Bruce is an independent open-source project: [pr3y/Bruce](https://github.com/pr3y/Bruce).
 
-5. Monitor & capture
-   - Use idf.py monitor or a serial terminal to observe device logs.
-   - For packet capture use a dedicated monitor interface and Wireshark (only in lab).
-   - Use the provided tools in `tools/capture/` to rotate pcaps and export anonymized metadata.
+The firmware, its implementation, and its built-in features belong to their respective upstream authors and contributors. This repository records my hardware use, setup experience, and learning notes. Any upstream assets or code will retain their original licensing and attribution.
 
-Safe example experiments (only in controlled lab)
-- Passive metadata logging: collect anonymized frame metadata (timestamp, frame type, RSSI) and avoid storing MACs or payloads unless necessary — and then immediately anonymize/secure them.
-- Beacon/probe simulation: generate a small, rate-limited set of beacons on an isolated AP to test detection signatures.
-- On-device anomaly detection: run a tiny ML rule or heuristics to flag management frame anomalies and report only aggregated alerts.
+## Safe and authorized use
 
-Security & privacy best practices
-- Avoid capturing or storing plaintext payloads or personally identifiable information (PII).
-- Encrypt any telemetry sent off-device and restrict access to stored captures.
-- Delete or securely store experimental captures once analysis is complete.
+I use security-testing features only with devices and networks I own or have explicit permission to assess. I do not publish credentials, private network identifiers, or other people's traffic. Experiments should be controlled and should not disrupt nearby networks or devices.
 
-Learning outcomes
-- Familiarity with LilyGO T-Watch S3 hardware and ESP32-S3 toolchains.
-- Practical understanding of 802.11 management frames and WiFi telemetry sources.
-- How to build reproducible, isolated wireless testbeds.
-- How to implement simple on-device detection and responsibly handle captured data.
-- Ethical research practices including permission models and responsible disclosure.
+## Repository status and future work
 
-Contributing (ethical-first)
-- Contributions are welcome but must preserve the educational and ethical focus.
-- Open an issue to discuss potentially sensitive experiments before submitting PRs.
-- Mark any code that could be misused with clear warnings and safe defaults (rate-limits, disabled-by-default dangerous examples).
-- Follow the contributor guidelines in .github/ and sign any required DCO if present.
+This repository is currently a record of device usage rather than a source-code toolkit. Future additions may include:
 
-Responsible disclosure & reporting
-- If you discover a vulnerability in third-party products, stop active testing, collect minimal PoC data, and follow the vendor's vulnerability disclosure process.
-- If no vendor process exists, contact the vendor privately and allow reasonable time for remediation.
-- Document your actions and retain proof of permission for your experiments.
+- [ ] Verified device revision and hardware specifications
+- [ ] Bruce release/version used
+- [ ] My own installation photos and setup notes
+- [ ] Notes on device controls, display, battery, and connectivity
+- [ ] Safe experiment logs describing purpose, setup, observations, and limitations
+- [ ] Links to relevant upstream documentation
 
-Testing & CI
-- Keep CI focused on linters and host-side tests; do not automate hardware attacks.
-- Use unit tests for parsing/analyzing scripts in `tools/analysis/`.
-- Manual hardware-in-the-loop checks belong in `tests/hw/` and must be documented.
+No feature will be described as implemented by me unless I add and verify my own code for it.
 
-License
-- Choose an appropriate open-source license (e.g., MIT or Apache-2.0). Include a LICENSE file.
+## References
 
-Contact & support
-- File issues on GitHub or contact the repo owner. For this template, replace with your GitHub handle or project maintainer contact.
+- [LilyGO](https://github.com/Xinyuan-LilyGO)
+- [Bruce firmware](https://github.com/pr3y/Bruce)
+- [Espressif ESP32-S3 documentation](https://docs.espressif.com/projects/esp-idf/en/latest/esp32s3/)
 
-Acknowledgements
-- This project is intended for teaching and defensive research. Always secure explicit authorization before running experiments on third-party equipment or networks.
-
+---
+A practical record of learning through real hardware, careful experimentation, and accurate attribution.
